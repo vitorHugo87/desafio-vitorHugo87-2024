@@ -95,6 +95,20 @@ class RecintosZoo {
         }
         recintosPossiveis = recPos2;
 
+        // Hipopótamo(s) só tolera(m) outras espécies estando num recinto com savana e rio
+        if (animal == "HIPOPOTAMO") {
+            recPos2 = [];
+            recintosPossiveis.forEach(recinto => {
+                if (this.qtdAnimais(recinto) <= 1) recPos2.push(recinto);
+                else {
+                    if(recinto.bioma.includes("savana") && recinto.bioma.includes("rio")){
+                        recPos2.push(recinto);
+                    }
+                }
+            });
+        }
+        recintosPossiveis = recPos2;
+
         // Caso não haja nenhum recinto, lança um erro
         if (recintosPossiveis.length === 0) {
             return {
@@ -186,6 +200,16 @@ class RecintosZoo {
                 }
                 return false;
         }
+    }
+
+    qtdAnimais(recinto) {
+        let animaisNoRecinto = [];
+        recinto.animais.forEach(animal => {
+            if (!animaisNoRecinto.includes(animal)) {
+                animaisNoRecinto.push(animal);
+            }
+        });
+        return animaisNoRecinto.length;
     }
 
     formata(recinto) {
