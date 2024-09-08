@@ -101,13 +101,22 @@ class RecintosZoo {
             recintosPossiveis.forEach(recinto => {
                 if (this.qtdAnimais(recinto) <= 1) recPos2.push(recinto);
                 else {
-                    if(recinto.bioma.includes("savana") && recinto.bioma.includes("rio")){
+                    if (recinto.bioma.includes("savana") && recinto.bioma.includes("rio")) {
                         recPos2.push(recinto);
                     }
                 }
             });
+            recintosPossiveis = recPos2;
         }
-        recintosPossiveis = recPos2;
+        
+        // Um macaco não se sente confortável sem outro animal no recinto, seja da mesma ou outra espécie
+        if (animal == "MACACO") {
+            recPos2 = [];
+            recintosPossiveis.forEach(recinto => {
+                if(recinto.animais.length > 1) recPos2.push(recinto);
+            });
+            recintosPossiveis = recPos2;
+        }
 
         // Caso não haja nenhum recinto, lança um erro
         if (recintosPossiveis.length === 0) {
@@ -127,6 +136,10 @@ class RecintosZoo {
         }
     }
 
+
+    // ----------------------- Funções Auxiliares -----------------------
+    
+    // Calcula quanto de espaço ja foi ocupado em um determinado recinto
     espacoOcupado(recinto) {
         let qtd = 0;
         recinto.animais.forEach(animal => {
@@ -166,6 +179,7 @@ class RecintosZoo {
         return qtd;
     }
 
+    // Verifica se o animal pertence a aquele bioma e retorna True ou False
     biomaValido(biomas, animal) {
         // Basicamente percorre todos os biomas fornecidos e verifica se o animal entra em algum deles
         switch (animal) {
@@ -202,6 +216,7 @@ class RecintosZoo {
         }
     }
 
+    // Conta quantos animais diferentes situam o mesmo recinto
     qtdAnimais(recinto) {
         let animaisNoRecinto = [];
         recinto.animais.forEach(animal => {
@@ -212,6 +227,7 @@ class RecintosZoo {
         return animaisNoRecinto.length;
     }
 
+    // Converte o dicionario recinto em uma String
     formata(recinto) {
         return "Recinto " + recinto.num + " (espaço livre: "
             + (recinto.tamanho - this.espacoOcupado(recinto)) + " total: " + recinto.tamanho + ")";
